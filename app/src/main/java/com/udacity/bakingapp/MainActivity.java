@@ -1,6 +1,7 @@
 package com.udacity.bakingapp;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
 
     @Override
     public void onClick(Recipe recipe) {
-
+        startActivity(new Intent(this, RecipeActivity.class)
+                .putExtra(RecipeActivity.EXTRA_RECIPE, recipe));
     }
 }
