@@ -1,14 +1,10 @@
 package com.udacity.bakingapp;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.udacity.bakingapp.model.Recipe;
-import com.udacity.bakingapp.model.Step;
 
 public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickListener {
 
@@ -33,7 +29,9 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
     }
 
     @Override
-    public void onStepClick(Step step) {
-
+    public void onStepClick(int stepPos) {
+        startActivity(new Intent(this, RecipeStepActivity.class)
+                .putExtra(RecipeStepActivity.EXTRA_RECIPE, mRecipe)
+                .putExtra(RecipeStepActivity.EXTRA_STEP_POS, stepPos));
     }
 }

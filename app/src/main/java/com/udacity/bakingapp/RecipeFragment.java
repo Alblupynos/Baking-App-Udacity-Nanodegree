@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.udacity.bakingapp.adapter.IngredientAdapter;
 import com.udacity.bakingapp.adapter.StepAdapter;
 import com.udacity.bakingapp.model.Recipe;
-import com.udacity.bakingapp.model.Step;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,13 +81,13 @@ public class RecipeFragment extends Fragment implements StepAdapter.OnClickHandl
     }
 
     @Override
-    public void onClick(Step step) {
+    public void onClick(int stepPos) {
         if (mListener != null) {
-            mListener.onStepClick(step);
+            mListener.onStepClick(stepPos);
         }
     }
 
     public interface OnStepClickListener {
-        void onStepClick(Step step);
+        void onStepClick(int stepPos);
     }
 }

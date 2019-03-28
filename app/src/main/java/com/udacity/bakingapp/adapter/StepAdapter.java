@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.bakingapp.R;
-import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.model.Step;
 
 import java.util.List;
@@ -56,11 +55,11 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepVH> {
 
         @Override
         public void onClick(View v) {
-            mClickHandler.onClick(mData.get(getAdapterPosition()));
+            mClickHandler.onClick(getAdapterPosition());
         }
     }
 
     public interface OnClickHandler {
-        void onClick(Step step);
+        void onClick(int stepPos);
     }
 }
