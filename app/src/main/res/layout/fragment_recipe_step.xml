@@ -10,6 +10,11 @@
         android:orientation="vertical"
         tools:context=".RecipeStepFragment">
 
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="230dp" />
+
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
