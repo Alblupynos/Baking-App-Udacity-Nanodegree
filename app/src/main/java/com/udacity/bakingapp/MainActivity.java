@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.udacity.bakingapp.adapter.RecipeAdapter;
 import com.udacity.bakingapp.model.Recipe;
+import com.udacity.bakingapp.utils.Utils;
 import com.udacity.bakingapp.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -30,7 +32,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         RecipeAdapter recipeAdapter = new RecipeAdapter(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (Utils.isTablet(this)) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
         recyclerView.setAdapter(recipeAdapter);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.getRecipes().observe(this, recipes -> {

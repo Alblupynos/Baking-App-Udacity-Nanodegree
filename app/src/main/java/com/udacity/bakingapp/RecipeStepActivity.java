@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.udacity.bakingapp.model.Recipe;
+import com.udacity.bakingapp.utils.Utils;
 
 public class RecipeStepActivity extends AppCompatActivity {
 
@@ -28,6 +29,9 @@ public class RecipeStepActivity extends AppCompatActivity {
                         .add(R.id.f_recipe_step, RecipeStepFragment.newInstance(mRecipe, mStepPos))
                         .commit();
             }
+        }
+        if (savedInstanceState != null && Utils.isTablet(this) && Utils.isLandscape(this)) {
+            finish();
         }
     }
 }
