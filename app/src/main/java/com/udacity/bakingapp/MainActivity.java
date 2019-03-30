@@ -1,5 +1,6 @@
 package com.udacity.bakingapp;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import com.udacity.bakingapp.adapter.RecipeAdapter;
 import com.udacity.bakingapp.model.Recipe;
 import com.udacity.bakingapp.utils.Utils;
 import com.udacity.bakingapp.viewmodel.MainViewModel;
+import com.udacity.bakingapp.widget.IngredientsWidget;
+import com.udacity.bakingapp.widget.WidgetPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
     @BindView(R.id.recyclerview) RecyclerView recyclerView;
     @BindView(R.id.tv_error_message_display) TextView errorMessageDisplay;
     @BindView(R.id.pb_loading_indicator) ProgressBar loadingIndicator;
+
+    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +55,31 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 recipeAdapter.setData(recipes);
             }
         });
+        // Find the widget id from the intent.
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                setResult(RESULT_CANCELED);
+            }
+        }
     }
 
     @Override
     public void onClick(Recipe recipe) {
-        startActivity(new Intent(this, RecipeActivity.class)
-                .putExtra(RecipeActivity.EXTRA_RECIPE, recipe));
+        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            startActivity(new Intent(this, RecipeActivity.class)
+                    .putExtra(RecipeActivity.EXTRA_RECIPE, recipe));
+        } else {
+            WidgetPrefs.saveRecipe(this, mAppWidgetId, recipe);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            IngredientsWidget.updateAppWidget(this, appWidgetManager, mAppWidgetId);
+
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+        }
     }
 }
