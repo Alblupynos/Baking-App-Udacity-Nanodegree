@@ -4,6 +4,11 @@ import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +36,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
+    @Nullable
+    private CountingIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new CountingIdlingResource("LoadList");
+        }
+        return mIdlingResource;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +61,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
         }
         recyclerView.setAdapter(recipeAdapter);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        getIdlingResource();
+        if (mIdlingResource != null) {
+            mIdlingResource.increment();
+        }
         mViewModel.getRecipes().observe(this, recipes -> {
             loadingIndicator.setVisibility(View.INVISIBLE);
             if (recipes == null) {
@@ -53,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnC
                 recyclerView.setVisibility(View.VISIBLE);
                 errorMessageDisplay.setVisibility(View.INVISIBLE);
                 recipeAdapter.setData(recipes);
+            }
+            if (mIdlingResource != null) {
+                mIdlingResource.decrement();
             }
         });
         // Find the widget id from the intent.

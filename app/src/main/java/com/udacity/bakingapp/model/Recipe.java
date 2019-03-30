@@ -14,6 +14,15 @@ public class Recipe implements Parcelable {
     private int servings;
     private String image;
 
+    public Recipe(long id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.servings = servings;
+        this.image = image;
+    }
+
     protected Recipe(Parcel in) {
         id = in.readLong();
         name = in.readString();
